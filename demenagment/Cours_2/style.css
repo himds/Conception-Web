@@ -1,0 +1,114 @@
+/* Si vous avez besoin d'un fichier CSS */
+.navbar-brand {
+  font-weight: 600;
+}
+
+.card-title {
+  font-size: 1.05rem;
+}
+
+.container {
+  padding-bottom: 40px;
+}
+
+/* Orange theme */
+:root {
+  --brand-orange: #ff7a1a;
+  /* primary brand */
+  --brand-orange-600: #ff6a00;
+  --brand-orange-700: #e55f00;
+  --brand-orange-100: #fff3e8;
+  --text-dark: #222;
+  --muted: #6c757d;
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-orange:hover,
+.btn-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange-600);
+  border-color: var(--brand-orange-600);
+}
+
+.btn-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+.btn-outline-orange {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  background-color: transparent;
+}
+
+.btn-outline-orange:hover,
+.btn-outline-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-outline-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+/* Navbar theme override */
+.navbar[data-bs-theme="dark"].bg-dark {
+  background-color: var(--brand-orange) !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #000;
+  /* better contrast on orange */
+}
+
+/* Links */
+a {
+  color: var(--brand-orange);
+}
+
+a:hover {
+  color: var(--brand-orange-700);
+}
+
+/* Smooth transitions for UI elements */
+.btn,
+.form-control,
+.form-select,
+.nav-link,
+a {
+  transition: all .2s ease-in-out;
+}
+
+/* Card polish */
+.card {
+  border: 1px solid #eee;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .06);
+}
+
+.card-title {
+  color: var(--text-dark);
+}
+
+/* Table header accent */
+.table thead th {
+  background: var(--brand-orange-100);
+  color: var(--text-dark);
+}
+
+/* Form focus states */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 .2rem rgba(255, 122, 26, .25);
+}
