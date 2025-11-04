@@ -1,0 +1,210 @@
+/* Si vous avez besoin d'un fichier CSS */
+.navbar-brand {
+  font-weight: 600;
+}
+
+.card-title {
+  font-size: 1.05rem;
+}
+
+.container {
+  padding-bottom: 40px;
+}
+
+/* Orange theme */
+:root {
+  --brand-orange: #ff7a1a;
+  /* primary brand */
+  --brand-orange-600: #ff6a00;
+  --brand-orange-700: #e55f00;
+  --brand-orange-100: #fff3e8;
+  --text-dark: #222;
+  --muted: #6c757d;
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-orange:hover,
+.btn-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange-600);
+  border-color: var(--brand-orange-600);
+}
+
+.btn-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+.btn-outline-orange {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  background-color: transparent;
+}
+
+.btn-outline-orange:hover,
+.btn-outline-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-outline-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+/* Navbar theme override */
+.navbar[data-bs-theme="dark"].bg-dark {
+  background-color: var(--brand-orange) !important;
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #000;
+  /* better contrast on orange */
+}
+
+/* Links */
+a {
+  color: var(--brand-orange);
+}
+
+a:hover {
+  color: var(--brand-orange-700);
+}
+
+/* Smooth transitions for UI elements */
+.btn,
+.form-control,
+.form-select,
+.nav-link,
+a {
+  transition: all .2s ease-in-out;
+}
+
+/* Card polish */
+.card {
+  border: 1px solid #eee;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .06);
+}
+
+.card-title {
+  color: var(--text-dark);
+}
+
+/* Table header accent */
+.table thead th {
+  background: var(--brand-orange-100);
+  color: var(--text-dark);
+}
+
+/* Form focus states */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 .2rem rgba(255, 122, 26, .25);
+}
+
+/* -------- UI polish additions -------- */
+/* Alerts with soft shadow */
+.alert {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+  border: 1px solid #f1f1f1;
+}
+
+/* Tables: better readability */
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #fff8f1;
+}
+
+/* Badges and small labels */
+.badge {
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+/* Spacing on cards and sections */
+.card+.card {
+  margin-top: 1rem;
+}
+
+/* Form labels and spacing */
+.form-label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-control,
+.form-select {
+  border-radius: .5rem;
+}
+
+/* List group polish (used by messages & evaluations) */
+.list-group-item {
+  border: 1px solid #f0f0f0;
+}
+
+.list-group-item+.list-group-item {
+  border-top-color: #eee;
+}
+
+/* Buttons subtle elevation */
+.btn {
+  border-radius: .5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+/* Small helpers */
+.text-muted {
+  color: var(--muted) !important;
+}
+
+/* -------- Orange accent theming -------- */
+/* Section headings with orange accent (applies to many of our h2.h4 titles) */
+.container h2.h4 {
+  padding-left: .6rem;
+  border-left: 4px solid var(--brand-orange);
+}
+
+/* Soft orange section divider */
+.section-divider {
+  height: 2px;
+  background: var(--brand-orange-100);
+  border: none;
+  margin: 1rem 0 1.25rem;
+}
+
+/* Subtle orange accent on list items hover (messages & evaluations) */
+.list-group-item:hover {
+  border-left: 4px solid var(--brand-orange);
+  background-color: #fff8f1;
+}
+
+/* Utility: light orange background */
+.bg-orange-100 {
+  background: var(--brand-orange-100) !important;
+}
+
+/* Utility: orange badge */
+.badge-orange {
+  background: var(--brand-orange);
+  color: #fff;
+}
