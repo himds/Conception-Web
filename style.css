@@ -1,0 +1,633 @@
+/* Si vous avez besoin d'un fichier CSS */
+.navbar-brand {
+  font-weight: 600;
+}
+
+.card-title {
+  font-size: 1.05rem;
+}
+
+.container {
+  padding-bottom: 40px;
+}
+
+/* Orange theme */
+:root {
+  --brand-orange: #ff7a1a;
+  /* primary brand */
+  --brand-orange-600: #ff6a00;
+  --brand-orange-700: #e55f00;
+  --brand-orange-100: #fff3e8;
+  --text-dark: #1a1a1a;
+  --text-primary: #2c2c2c;
+  --text-secondary: #4a4a4a;
+  --muted: #6c757d;
+}
+
+.btn-orange {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-orange:hover,
+.btn-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange-600);
+  border-color: var(--brand-orange-600);
+}
+
+.btn-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+.btn-outline-orange {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  background-color: transparent;
+}
+
+.btn-outline-orange:hover,
+.btn-outline-orange:focus {
+  color: #fff;
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+.btn-outline-orange:active {
+  color: #fff;
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+/* Navbar theme override */
+.navbar[data-bs-theme="dark"].bg-dark {
+  background-color: var(--brand-orange) !important;
+}
+
+/* Index页面导航栏 - 与背景图片适配的半透明橙色 */
+body.index-page .navbar {
+  background-color: rgba(255, 140, 0, 0.85) !important; /* 半透明橙色，与背景图适配 */
+  margin-bottom: 0 !important;
+  /* 立体结构 */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+              0 2px 10px rgba(0, 0, 0, 0.2),
+              inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  /* 下半部分圆滑突起 */
+  border-bottom-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+  padding-bottom: 15px;
+  position: relative;
+  z-index: 1000;
+  /* 法式字体 */
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+  /* 添加毛玻璃效果，让背景图更自然地透过 */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* 导航栏文字颜色和字体 - 统一风格 */
+body.index-page .navbar .nav-link {
+  color: #2c1810 !important; /* 深棕色，在橙色背景上对比度好 */
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+body.index-page .navbar .nav-link:hover {
+  color: #fff !important; /* 悬停时使用白色，更突出 */
+  background-color: rgba(255, 140, 0, 0.3);
+  border-radius: 5px;
+}
+
+body.index-page .navbar .navbar-brand {
+  color: #2c1810 !important; /* 深棕色，与链接统一 */
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+  font-weight: 700;
+  position: relative;
+  left: -20px; /* 向左偏移 */
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+body.index-page .navbar .navbar-brand:hover {
+  color: #fff !important; /* 悬停时使用白色 */
+  background-color: rgba(255, 140, 0, 0.3);
+  border-radius: 5px;
+  padding: 5px 10px;
+}
+
+/* 导航栏立体效果增强 */
+body.index-page .navbar::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 95%;
+  height: 30px;
+  background: linear-gradient(to bottom, rgba(255, 140, 0, 0.85), rgba(255, 165, 0, 0.75)); /* 橙色渐变，与背景适配 */
+  border-radius: 0 0 25px 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.navbar .nav-link.active,
+.navbar .nav-link:focus,
+.navbar .nav-link:hover {
+  color: #000;
+  /* better contrast on orange */
+}
+
+/* Links */
+a {
+  color: var(--brand-orange);
+}
+
+a:hover {
+  color: var(--brand-orange-700);
+}
+
+/* Smooth transitions for UI elements */
+.btn,
+.form-control,
+.form-select,
+.nav-link,
+a {
+  transition: all .2s ease-in-out;
+}
+
+/* Card polish */
+.card {
+  border: 1px solid #eee;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .06);
+}
+
+.card-title {
+  color: var(--text-dark);
+}
+
+/* Table header accent */
+.table thead th {
+  background: var(--brand-orange-100);
+  color: var(--text-dark);
+}
+
+/* Form focus states */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 .2rem rgba(255, 122, 26, .25);
+}
+
+/* -------- UI polish additions -------- */
+/* Alerts with soft shadow */
+.alert {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .06);
+  border: 1px solid #f1f1f1;
+}
+
+/* Tables: better readability */
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #fff8f1;
+}
+
+/* Badges and small labels */
+.badge {
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+/* Spacing on cards and sections */
+.card+.card {
+  margin-top: 1rem;
+}
+
+/* Form labels and spacing */
+.form-label {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.form-control,
+.form-select {
+  border-radius: .5rem;
+}
+
+/* List group polish (used by messages & evaluations) */
+.list-group-item {
+  border: 1px solid #f0f0f0;
+}
+
+.list-group-item+.list-group-item {
+  border-top-color: #eee;
+}
+
+/* Buttons subtle elevation */
+.btn {
+  border-radius: .5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+}
+
+.btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .08);
+}
+
+/* Small helpers */
+.text-muted {
+  color: var(--muted) !important;
+}
+
+/* -------- Orange accent theming -------- */
+/* Section headings with orange accent (applies to many of our h2.h4 titles) */
+.container h2.h4 {
+  padding-left: .6rem;
+  border-left: 4px solid var(--brand-orange);
+}
+
+/* Soft orange section divider */
+.section-divider {
+  height: 2px;
+  background: var(--brand-orange-100);
+  border: none;
+  margin: 1rem 0 1.25rem;
+}
+
+/* Subtle orange accent on list items hover (messages & evaluations) */
+.list-group-item:hover {
+  border-left: 4px solid var(--brand-orange);
+  background-color: #fff8f1;
+}
+
+/* Utility: light orange background */
+.bg-orange-100 {
+  background: var(--brand-orange-100) !important;
+}
+
+/* Utility: orange badge */
+.badge-orange {
+  background: var(--brand-orange);
+  color: #fff;
+}
+
+/* 进入动画样式 - 只在index.php显示 */
+body.index-page-only .intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--brand-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: slideUp 1.5s ease-in-out 1.5s forwards;
+}
+
+/* 其他页面不显示动画层 */
+body.index-page:not(.index-page-only) .intro-overlay,
+.intro-overlay:not(body.index-page-only .intro-overlay) {
+  display: none !important;
+}
+
+.intro-content {
+  text-align: center;
+}
+
+.intro-title {
+  color: #fff;
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 0;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* 主内容初始隐藏，动画结束后显示 - 仅对index.php */
+body.index-page.index-page-only .index-page-background {
+  opacity: 0;
+  animation: fadeInContent 0.5s ease-in-out 2.5s forwards;
+}
+
+/* 登录和注册页面立即显示，不等待动画 */
+body.index-page:not(.index-page-only) .index-page-background {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Index page background - 修复背景图片和布局问题，优化清晰度 */
+body.index-page {
+  margin: 0;
+  padding: 0;
+  background-image: url('images/04b6b005-1fd8-44fe-bec5-367702928191.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  /* 优化图片渲染质量 */
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  /* 使用高质量插值，避免模糊 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: auto;
+  /* 使用高质量插值 */
+  -ms-interpolation-mode: bicubic;
+  /* 优化渲染性能 */
+  will-change: background-image;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* 强制浏览器使用高质量渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.index-page-background {
+  margin: 0;
+  padding: 0;
+}
+
+/* 内容区域样式 - 填充大部分页面，50%透明 */
+body.index-page .index-page-background .container-fluid {
+  max-width: 95%;
+  padding-left: 2.5%;
+  padding-right: 2.5%;
+  background-color: rgba(255, 255, 255, 0.5); /* 50%透明 */
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* 三个部分（内容框）- 80%透明，统一字体颜色 */
+body.index-page .index-page-background .container-fluid .bg-light {
+  background-color: rgba(248, 249, 250, 0.2) !important; /* 80%透明 */
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--text-primary); /* 统一文字颜色 */
+  min-height: 50px; /* 确保最小高度 */
+  display: block !important; /* 确保显示 */
+}
+
+/* Index页面内容区域统一字体颜色 */
+body.index-page .index-page-background h1,
+body.index-page .index-page-background h2,
+body.index-page .index-page-background h3,
+body.index-page .index-page-background h4,
+body.index-page .index-page-background h5,
+body.index-page .index-page-background h6 {
+  color: var(--text-dark); /* 统一标题颜色 */
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+}
+
+body.index-page .index-page-background p,
+body.index-page .index-page-background .card-text,
+body.index-page .index-page-background .lead {
+  color: var(--text-primary); /* 统一正文颜色 */
+}
+
+body.index-page .index-page-background .card-title {
+  color: var(--text-dark); /* 统一卡片标题颜色 */
+}
+
+/* Index页面链接颜色统一 */
+body.index-page .index-page-background a {
+  color: var(--brand-orange);
+  transition: color 0.3s ease;
+}
+
+body.index-page .index-page-background a:hover {
+  color: var(--brand-orange-700);
+}
+
+/* Index页面按钮颜色统一 */
+body.index-page .index-page-background .btn-primary {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+body.index-page .index-page-background .btn-primary:hover {
+  background-color: var(--brand-orange-700);
+  border-color: var(--brand-orange-700);
+}
+
+body.index-page .index-page-background .btn-outline-primary {
+  color: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
+
+body.index-page .index-page-background .btn-outline-primary:hover {
+  background-color: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+
+/* 轮播图标题样式 - 居中并用橙色方框包裹 */
+.carousel-title-container {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.carousel-title-container h2 {
+  display: inline-block;
+  padding: 10px 30px;
+  border: 3px solid var(--brand-orange);
+  border-radius: 8px;
+  background-color: rgba(255, 140, 0, 0.1);
+  color: var(--text-dark);
+}
+
+/* 轮播图样式 */
+.carousel-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  display: flex;
+}
+
+.carousel-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 140, 0, 0.8);
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-btn:hover {
+  background-color: rgba(255, 140, 0, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn-prev {
+  left: 20px;
+}
+
+.carousel-btn-next {
+  right: 20px;
+}
+
+.carousel-arrow {
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 媒体容器样式 - 图片和视频并排 */
+.media-container {
+  align-items: center;
+  justify-content: center;
+}
+
+/* 图片容器样式 - 与视频大小一致 */
+.demenage-image-container {
+  flex-shrink: 0;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+}
+
+.demenage-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 10px;
+}
+
+/* 视频容器样式 - 与图片大小一致 */
+.video-container {
+  flex-shrink: 0;
+  width: 300px;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video-container video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 搜索结果容器样式 */
+.search-results-container {
+  margin-top: 20px;
+}
+
+.search-results-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.result-item {
+  padding-bottom: 10px;
+}
+
+.result-title {
+  font-size: 1.1rem;
+  color: var(--brand-orange);
+  margin-bottom: 5px;
+}
+
+.result-description {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 5px;
+}
+
+.result-date {
+  font-size: 0.85rem;
+}
