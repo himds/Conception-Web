@@ -23,6 +23,8 @@
     $stmt->bind_param("i", $_SESSION['user']['id']);
     $stmt->execute();
     $res = $stmt->get_result();
+    echo '<div class="index-page-background">';
+    echo '<div class="container-fluid my-4">';
     echo '<h1>Mes offres</h1>';
     if($res->num_rows === 0){
       echo '<div class="alert alert-info">Aucune offre.</div>';
@@ -44,6 +46,8 @@
     }
     $stmt->close();
   }
+  echo '</div>';
+  echo '</div>';
 
   include('footer.inc.php');
 ?>

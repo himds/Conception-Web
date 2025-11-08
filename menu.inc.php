@@ -8,13 +8,26 @@
         <li class="nav-item"><a class="nav-link" href="annonces.php">Annonces</a></li>
         
         <?php if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 1) { ?>
-          <li class="nav-item"><a class="nav-link" href="annonce_nouvelle.php">Nouvelle annonce</a></li>
-          <li class="nav-item"><a class="nav-link" href="annonces.php">Mes annonces</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="clientDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Mes services
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="clientDropdown">
+              <li><a class="dropdown-item" href="annonce_nouvelle.php">Créer une annonce</a></li>
+              <li><a class="dropdown-item" href="mes_annonces.php">Mes annonces</a></li>
+              <li><a class="dropdown-item" href="annonces.php">Les annonces</a></li>
+            </ul>
+          </li>
         <?php } ?>
 
         <?php if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 2) { ?>
+          <li class="nav-item"><a class="nav-link" href="mes_nominations.php">Mes nominations</a></li>
           <li class="nav-item"><a class="nav-link" href="mes_offres.php">Mes offres</a></li>
           <li class="nav-item"><a class="nav-link" href="mes_evaluations.php">Mes évaluations</a></li>
+        <?php } ?>
+
+        <?php if(isset($_SESSION['user']) && $_SESSION['user']['role'] == 3) { ?>
+          <li class="nav-item"><a class="nav-link" href="admin.php">Administration</a></li>
         <?php } ?>
       </ul>
     </div>

@@ -36,52 +36,100 @@
     exit;
   }
 
-  $sql = "INSERT INTO annonce (client_id, titre, description, date_debut, ville_depart, ville_arrivee, depart_type, depart_etage, depart_ascenseur, arrivee_type, arrivee_etage, arrivee_ascenseur, volume_m3, poids_kg, nb_demenageurs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-  if($stmt = $mysqli->prepare($sql)){
-    $stmt->bind_param(
-      "issssssii ssii i",
-      $clientId,
-      $titre,
-      $description,
-      $date_debut,
-      $ville_depart,
-      $ville_arrivee,
-      $depart_type,
-      $depart_etage,
-      $depart_ascenseur,
-      $arrivee_type,
-      $arrivee_etage,
-      $arrivee_ascenseur,
-      $volume_m3,
-      $poids_kg,
-      $nb_demenageurs
-    );
-    // 修正: 为了避免空格影响，重新按段绑定
+  // 检查账户是否被停用
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $clientId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas créer d'annonce.";
+          header('Location: mes_annonces.php');
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
   }
 
-  // 由于 bind_param 类型串需紧凑，我们重新准备并绑定
-  if($stmt2 = $mysqli->prepare($sql)){
-    // client_id(i), titre(s), description(s), date_debut(s), ville_depart(s), ville_arrivee(s), depart_type(s), depart_etage(i), depart_ascenseur(i), arrivee_type(s), arrivee_etage(i), arrivee_ascenseur(i), volume_m3(d), poids_kg(i), nb_demenageurs(i)
-    $stmt2->bind_param(
-      "issssssiisidii",
-      $clientId,
-      $titre,
-      $description,
-      $date_debut,
-      $ville_depart,
-      $ville_arrivee,
-      $depart_type,
-      $depart_etage,
-      $depart_ascenseur,
-      $arrivee_type,
-      $arrivee_etage,
-      $arrivee_ascenseur,
-      $volume_m3,
-      $poids_kg,
-      $nb_demenageurs
-    );
-    if($stmt2->execute()){
-      $annonceId = $stmt2->insert_id;
+  $sql = "INSERT INTO annonce (client_id, titre, description, date_debut, ville_depart, ville_arrivee, depart_type, depart_etage, depart_ascenseur, arrivee_type, arrivee_etage, arrivee_ascenseur, volume_m3, poids_kg, nb_demenageurs) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+  if($stmt = $mysqli->prepare($sql)){
+    // MySQLi bind_param 处理 NULL 值：对于可能为 NULL 的参数，使用变量引用
+    // 所有参数都需要通过引用传递
+    $depart_etage_ref = $depart_etage;
+    $arrivee_etage_ref = $arrivee_etage;
+    $volume_m3_ref = $volume_m3;
+    $poids_kg_ref = $poids_kg;
+    $nb_demenageurs_ref = $nb_demenageurs;
+    
+    // 使用 call_user_func_array 来动态绑定参数
+    $types = "issssss";
+    $params = [&$clientId, &$titre, &$description, &$date_debut, &$ville_depart, &$ville_arrivee, &$depart_type];
+    
+    // depart_etage: 如果是 NULL，使用 's' 类型，否则使用 'i'
+    if($depart_etage === NULL) {
+      $types .= "s";
+      $depart_etage_null = null;
+      $params[] = &$depart_etage_null;
+    } else {
+      $types .= "i";
+      $params[] = &$depart_etage_ref;
+    }
+    
+    $types .= "is";
+    $params[] = &$depart_ascenseur;
+    $params[] = &$arrivee_type;
+    
+    // arrivee_etage: 如果是 NULL，使用 's' 类型，否则使用 'i'
+    if($arrivee_etage === NULL) {
+      $types .= "s";
+      $arrivee_etage_null = null;
+      $params[] = &$arrivee_etage_null;
+    } else {
+      $types .= "i";
+      $params[] = &$arrivee_etage_ref;
+    }
+    
+    $types .= "i";
+    $params[] = &$arrivee_ascenseur;
+    
+    // volume_m3: 如果是 NULL，使用 's' 类型，否则使用 'd'
+    if($volume_m3 === NULL) {
+      $types .= "s";
+      $volume_m3_null = null;
+      $params[] = &$volume_m3_null;
+    } else {
+      $types .= "d";
+      $params[] = &$volume_m3_ref;
+    }
+    
+    // poids_kg: 如果是 NULL，使用 's' 类型，否则使用 'i'
+    if($poids_kg === NULL) {
+      $types .= "s";
+      $poids_kg_null = null;
+      $params[] = &$poids_kg_null;
+    } else {
+      $types .= "i";
+      $params[] = &$poids_kg_ref;
+    }
+    
+    // nb_demenageurs: 如果是 NULL，使用 's' 类型，否则使用 'i'
+    if($nb_demenageurs === NULL) {
+      $types .= "s";
+      $nb_demenageurs_null = null;
+      $params[] = &$nb_demenageurs_null;
+    } else {
+      $types .= "i";
+      $params[] = &$nb_demenageurs_ref;
+    }
+    
+    // 调用 bind_param（第一个参数是类型字符串，然后是所有参数）
+    call_user_func_array([$stmt, 'bind_param'], array_merge([$types], $params));
+    
+    if($stmt->execute()){
+      $annonceId = $stmt->insert_id;
 
       // 上传图片（可选）
       if(isset($_FILES['images']) && is_array($_FILES['images']['name'])){
@@ -108,19 +156,45 @@
         }
       }
 
-      $_SESSION['message'] = "Annonce publiée";
-      header('Location: annonce_detail.php?id='.$annonceId);
+      // 创建指名（如果选择了搬家工人）
+      if(isset($_POST['demenageurs']) && is_array($_POST['demenageurs']) && count($_POST['demenageurs']) > 0){
+        $demenageurs = array_map('intval', $_POST['demenageurs']);
+        $demenageurs = array_filter($demenageurs, function($id) { return $id > 0; });
+        
+        if(count($demenageurs) > 0){
+          if($stmtNom = $mysqli->prepare("INSERT INTO nomination(annonce_id, demenageur_id, etat) VALUES (?,?, 'en_attente')")){
+            foreach($demenageurs as $demenageurId){
+              $stmtNom->bind_param("ii", $annonceId, $demenageurId);
+              $stmtNom->execute();
+            }
+            $stmtNom->close();
+          }
+        }
+      }
+
+      $_SESSION['message'] = "Annonce publiée" . (isset($_POST['demenageurs']) && count($_POST['demenageurs']) > 0 ? " et déménageurs invités" : "");
+      $stmt->close();
+      header('Location: mes_annonces.php');
       exit;
     } else {
-      $_SESSION['erreur'] = "Impossible d'enregistrer l'annonce";
+      // 获取详细的错误信息
+      $error_msg = "Impossible d'enregistrer l'annonce";
+      if($mysqli->error) {
+        $error_msg .= " : " . $mysqli->error;
+      }
+      if($stmt->error) {
+        $error_msg .= " (Statement: " . $stmt->error . ")";
+      }
+      $_SESSION['erreur'] = $error_msg;
+      $stmt->close();
       header('Location: annonce_nouvelle.php');
       exit;
     }
+  } else {
+    $_SESSION['erreur'] = "Erreur de préparation : " . ($mysqli->error ?? "Erreur inconnue");
+    header('Location: annonce_nouvelle.php');
+    exit;
   }
-
-  $_SESSION['erreur'] = "Erreur interne";
-  header('Location: annonce_nouvelle.php');
-  exit;
 ?>
 
 

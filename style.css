@@ -388,15 +388,27 @@ body.index-page {
   padding: 0;
 }
 
-/* 内容区域样式 - 填充大部分页面，50%透明 */
-body.index-page .index-page-background .container-fluid {
+/* 内容区域样式 - 填充大部分页面，70%透明（30%不透明） */
+body.index-page .index-page-background .container-fluid,
+body.index-page .content-wrapper {
   max-width: 95%;
   padding-left: 2.5%;
   padding-right: 2.5%;
-  background-color: rgba(255, 255, 255, 0.5); /* 50%透明 */
+  background-color: rgba(255, 255, 255, 0.3); /* 70%透明 */
   border-radius: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
+  min-height: calc(100vh - 150px);
+}
+
+/* 所有登录后页面的通用内容容器 */
+body.index-page:not(.index-page-only) .content-wrapper {
+  max-width: 95%;
+  margin: 20px auto;
+  padding: 30px;
+  background-color: rgba(255, 255, 255, 0.3); /* 70%透明 */
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* 三个部分（内容框）- 80%透明，统一字体颜色 */
@@ -414,48 +426,64 @@ body.index-page .index-page-background h2,
 body.index-page .index-page-background h3,
 body.index-page .index-page-background h4,
 body.index-page .index-page-background h5,
-body.index-page .index-page-background h6 {
+body.index-page .index-page-background h6,
+body.index-page .content-wrapper h1,
+body.index-page .content-wrapper h2,
+body.index-page .content-wrapper h3,
+body.index-page .content-wrapper h4,
+body.index-page .content-wrapper h5,
+body.index-page .content-wrapper h6 {
   color: var(--text-dark); /* 统一标题颜色 */
   font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
 }
 
 body.index-page .index-page-background p,
 body.index-page .index-page-background .card-text,
-body.index-page .index-page-background .lead {
+body.index-page .index-page-background .lead,
+body.index-page .content-wrapper p,
+body.index-page .content-wrapper .card-text,
+body.index-page .content-wrapper .lead {
   color: var(--text-primary); /* 统一正文颜色 */
 }
 
-body.index-page .index-page-background .card-title {
+body.index-page .index-page-background .card-title,
+body.index-page .content-wrapper .card-title {
   color: var(--text-dark); /* 统一卡片标题颜色 */
 }
 
 /* Index页面链接颜色统一 */
-body.index-page .index-page-background a {
+body.index-page .index-page-background a,
+body.index-page .content-wrapper a {
   color: var(--brand-orange);
   transition: color 0.3s ease;
 }
 
-body.index-page .index-page-background a:hover {
+body.index-page .index-page-background a:hover,
+body.index-page .content-wrapper a:hover {
   color: var(--brand-orange-700);
 }
 
 /* Index页面按钮颜色统一 */
-body.index-page .index-page-background .btn-primary {
+body.index-page .index-page-background .btn-primary,
+body.index-page .content-wrapper .btn-primary {
   background-color: var(--brand-orange);
   border-color: var(--brand-orange);
 }
 
-body.index-page .index-page-background .btn-primary:hover {
+body.index-page .index-page-background .btn-primary:hover,
+body.index-page .content-wrapper .btn-primary:hover {
   background-color: var(--brand-orange-700);
   border-color: var(--brand-orange-700);
 }
 
-body.index-page .index-page-background .btn-outline-primary {
+body.index-page .index-page-background .btn-outline-primary,
+body.index-page .content-wrapper .btn-outline-primary {
   color: var(--brand-orange);
   border-color: var(--brand-orange);
 }
 
-body.index-page .index-page-background .btn-outline-primary:hover {
+body.index-page .index-page-background .btn-outline-primary:hover,
+body.index-page .content-wrapper .btn-outline-primary:hover {
   background-color: var(--brand-orange);
   border-color: var(--brand-orange);
   color: #fff;
@@ -630,4 +658,120 @@ body.index-page .index-page-background .btn-outline-primary:hover {
 
 .result-date {
   font-size: 0.85rem;
+}
+
+/* 客户端侧边栏样式 */
+.client-sidebar {
+  position: fixed;
+  left: 0;
+  top: 56px; /* 导航栏高度 */
+  width: 250px;
+  height: calc(100vh - 56px);
+  background-color: rgba(255, 140, 0, 0.95);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  overflow-y: auto;
+  padding-top: 20px;
+  font-family: 'Playfair Display', 'Cormorant Garamond', 'Lora', 'Garamond', serif;
+}
+
+.sidebar-header {
+  padding: 15px 20px;
+  background-color: rgba(255, 165, 0, 0.3);
+  border-bottom: 2px solid rgba(255, 140, 0, 0.5);
+}
+
+.sidebar-header h5 {
+  margin: 0;
+  color: #2c1810;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.sidebar-header-small {
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  color: #4a4a4a;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-item {
+  margin: 0;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #2c1810;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-left-color: #fff;
+  color: #fff;
+}
+
+.sidebar-link.disabled {
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.sidebar-link.disabled:hover {
+  background-color: transparent;
+  border-left-color: transparent;
+  color: #6c757d;
+}
+
+.sidebar-icon {
+  margin-right: 10px;
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 10px 0;
+}
+
+/* 当侧边栏存在时，调整主内容区域 */
+body:has(.client-sidebar) .container,
+body:has(.client-sidebar) .container-fluid,
+body:has(.client-sidebar) .content-wrapper {
+  margin-left: 270px;
+  padding-left: 20px;
+  width: calc(100% - 270px);
+  max-width: calc(100% - 270px);
+}
+
+/* 响应式：在小屏幕上隐藏侧边栏或改为可切换 */
+@media (max-width: 768px) {
+  .client-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .client-sidebar.show {
+    transform: translateX(0);
+  }
+  
+  body:has(.client-sidebar) .container,
+  body:has(.client-sidebar) .container-fluid {
+    margin-left: 0;
+    padding-left: 15px;
+  }
 }

@@ -15,7 +15,8 @@
     $page = basename($_SERVER['PHP_SELF']);
     if($page == 'index.php') {
       echo ' class="index-page index-page-only"';
-    } elseif(in_array($page, ['connexion.php', 'inscription.php'])) {
+    } else {
+      // 所有其他页面都使用背景图（包括登录、注册和所有登录后的页面）
       echo ' class="index-page"';
     }
   ?>>

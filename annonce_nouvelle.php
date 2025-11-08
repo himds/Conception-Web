@@ -9,8 +9,10 @@
   include('menu.inc.php');
   include('message.inc.php');
 ?>
-  <h1>Créer une annonce de déménagement</h1>
-  <form method="POST" action="tt_annonce_create.php" enctype="multipart/form-data">
+<div class="index-page-background">
+<div class="container-fluid my-4">
+    <h1>Créer une annonce de déménagement</h1>
+    <form method="POST" action="tt_annonce_create.php" enctype="multipart/form-data">
     <div class="row my-3">
       <div class="col-md-6">
         <label class="form-label" for="titre">Titre</label>
@@ -91,9 +93,41 @@
         <input class="form-control" type="number" min="0" id="poids_kg" name="poids_kg">
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="nb_demenageurs">Nombre de déménageurs</label>
-        <input class="form-control" type="number" min="1" id="nb_demenageurs" name="nb_demenageurs">
+        <label class="form-label" for="nb_demenageurs">Nombre de déménageurs requis</label>
+        <input class="form-control" type="number" min="1" id="nb_demenageurs" name="nb_demenageurs" required>
+        <small class="form-text text-muted">Sélectionnez les déménageurs ci-dessous selon ce nombre</small>
       </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Sélectionner les déménageurs (selon le nombre requis)</label>
+      <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+        <?php
+        require_once('param.inc.php');
+        $mysqli = new mysqli($host, $login, $passwd, $dbname);
+        if(!$mysqli->connect_error){
+          if($stmt = $mysqli->prepare("SELECT id, nom, prenom, email FROM compte WHERE role=2 ORDER BY nom, prenom")){
+            $stmt->execute();
+            $res = $stmt->get_result();
+            if($res->num_rows === 0){
+              echo '<div class="alert alert-info">Aucun déménageur disponible.</div>';
+            } else {
+              while($row = $res->fetch_assoc()){
+                echo '<div class="form-check mb-2">';
+                echo '<input class="form-check-input" type="checkbox" name="demenageurs[]" value="'.(int)$row['id'].'" id="demenageur_'.(int)$row['id'].'">';
+                echo '<label class="form-check-label" for="demenageur_'.(int)$row['id'].'">';
+                echo htmlspecialchars($row['prenom'].' '.$row['nom']).' ('.htmlspecialchars($row['email']).')';
+                echo '</label>';
+                echo '</div>';
+              }
+            }
+            $stmt->close();
+          }
+          $mysqli->close();
+        }
+        ?>
+      </div>
+      <small class="form-text text-muted">Cochez les déménageurs que vous souhaitez inviter pour ce déménagement</small>
     </div>
 
     <div class="mb-3">
@@ -104,7 +138,9 @@
     <div class="my-3">
       <button class="btn btn-primary" type="submit">Publier l'annonce</button>
     </div>
-  </form>
+    </form>
+</div>
+</div>
 <?php include('footer.inc.php'); ?>
 
 

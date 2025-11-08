@@ -26,6 +26,24 @@
     exit;
   }
 
+  // 检查账户是否被停用
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $demenageurId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas créer d'offre.";
+          header('Location: annonce_detail.php?id='.$annonceId);
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
+  }
+
   // Vérifier annonce publiee et pas soi-même
   if($stmt = $mysqli->prepare("SELECT client_id, statut FROM annonce WHERE id = ?")){
     $stmt->bind_param("i", $annonceId);

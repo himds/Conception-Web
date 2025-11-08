@@ -32,8 +32,8 @@
   $mysqli = new mysqli($host, $login, $passwd, $dbname);
   if ($mysqli->connect_error) {
     $_SESSION['erreur']="Problème de connexion à la base de données ! &#128557;";
-      // die('Erreur de connexion (' . $mysqli->connect_errno . ') '
-              // . $mysqli->connect_error);
+    header('Location: inscription.php');
+    exit;
   }
 
   // Vérifier si l'email existe déjà
@@ -58,17 +58,42 @@
     // Le message est mis dans la session, il est préférable de séparer message normal et message d'erreur.
     if($stmt->execute()) {
         // Requête exécutée correctement 
-        $_SESSION['message'] = "Enregistrement réussi";
-
+        $newUserId = $stmt->insert_id;
+        $stmt->close();
+        
+        // 自动登录：设置session并跳转到相应的页面
+        $_SESSION['user'] = [
+            'id' => $newUserId,
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $email,
+            'role' => $role
+        ];
+        $_SESSION['message'] = "Inscription réussie ! Bienvenue !";
+        
+        // 根据角色跳转到相应的页面
+        if($role === 1) {
+            // 客户 -> 创建公告页面
+            header('Location: annonce_nouvelle.php');
+        } else if($role === 2) {
+            // 搬家工人 -> 我的出价页面
+            header('Location: mes_offres.php');
+        } else {
+            header('Location: index.php');
+        }
+        exit;
     } else {
         // Il y a eu une erreur
         $_SESSION['erreur'] =  "Impossible d'enregistrer";
+        $stmt->close();
+        header('Location: inscription.php');
+        exit;
     }
+  } else {
+    $_SESSION['erreur'] = "Erreur lors de la préparation de la requête";
+    header('Location: inscription.php');
+    exit;
   }
- 
-
-
-  header('Location: index.php');
 
 
 ?>

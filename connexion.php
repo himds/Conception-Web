@@ -1,8 +1,10 @@
 <?php
+  session_start();
   $titre = "Connexion";
 
   include('header.inc.php');
   include('menu.inc.php');
+  include('message.inc.php');
 ?>
 
 <div class="index-page-background">

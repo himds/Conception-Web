@@ -18,12 +18,21 @@
     exit;
   }
 
-  // 列出对当前搬家人员的评价
-  $sql = "SELECT e.note, e.commentaire, e.created_at, a.titre, c.prenom, c.nom FROM evaluation e JOIN offre o ON o.id=e.offre_id JOIN annonce a ON a.id=o.annonce_id JOIN compte c ON c.id=e.client_id WHERE e.demenageur_id=? ORDER BY e.created_at DESC";
+  // 列出对当前搬家人员的评价（包括指名相关的）
+  $sql = "SELECT e.note, e.commentaire, e.created_at, a.titre, c.prenom, c.nom 
+          FROM evaluation e 
+          JOIN compte c ON c.id=e.client_id 
+          LEFT JOIN offre o ON o.id=e.offre_id 
+          LEFT JOIN nomination n ON n.id=e.nomination_id 
+          LEFT JOIN annonce a ON (a.id=o.annonce_id OR a.id=n.annonce_id)
+          WHERE e.demenageur_id=? 
+          ORDER BY e.created_at DESC";
   if($stmt = $mysqli->prepare($sql)){
     $stmt->bind_param("i", $_SESSION['user']['id']);
     $stmt->execute();
     $res = $stmt->get_result();
+    echo '<div class="index-page-background">';
+    echo '<div class="container-fluid my-4">';
     echo '<h1>Mes évaluations</h1>';
     if($res->num_rows === 0){
       echo '<div class="alert alert-info">Aucune évaluation.</div>';
@@ -48,6 +57,8 @@
     }
     $stmt->close();
   }
+  echo '</div>';
+  echo '</div>';
 
   include('footer.inc.php');
 ?>

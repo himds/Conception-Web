@@ -19,11 +19,29 @@
       exit;
   }
 
-  if ($stmt = $mysqli->prepare("SELECT id, nom, prenom, email, password, role FROM compte WHERE email = ? AND role = ? LIMIT 1")) {
+  // 检查 actif 字段是否存在
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  $hasActifField = $checkActif && $checkActif->num_rows > 0;
+  
+  // 构建查询语句
+  $sql = "SELECT id, nom, prenom, email, password, role";
+  if($hasActifField) {
+    $sql .= ", actif";
+  }
+  $sql .= " FROM compte WHERE email = ? AND role = ? LIMIT 1";
+  
+  if ($stmt = $mysqli->prepare($sql)) {
       $stmt->bind_param("si", $email, $selected_role);
       if ($stmt->execute()) {
           $result = $stmt->get_result();
           if ($row = $result->fetch_assoc()) {
+              // 检查账户是否被停用
+              if($hasActifField && isset($row['actif']) && $row['actif'] == 0){
+                $_SESSION['erreur'] = "Votre compte a été désactivé. Veuillez contacter l'administrateur.";
+                header('Location: connexion.php');
+                exit;
+              }
+              
               if (password_verify($password, $row['password'])) {
                   $_SESSION['user'] = [
                       'id' => $row['id'],
@@ -39,7 +57,7 @@
                   } else if((int)$row['role'] === 2){
                     header('Location: mes_offres.php');
                   } else if((int)$row['role'] === 3){
-                    header('Location: index.php'); // 管理员可以重定向到管理页面
+                    header('Location: admin.php'); // 管理员重定向到管理页面
                   } else {
                     header('Location: index.php');
                   }
@@ -47,6 +65,7 @@
               }
           }
       }
+      $stmt->close();
   }
 
   $_SESSION['erreur'] = "Identifiants invalides ou type de compte incorrect";

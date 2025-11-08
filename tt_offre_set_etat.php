@@ -26,6 +26,24 @@
     exit;
   }
 
+  // 检查账户是否被停用
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $clientId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas modifier les offres.";
+          header('Location: annonce_offres.php?id='.$annonceId);
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
+  }
+
   // Vérifier propriété de l'annonce et état
   if($stmt = $mysqli->prepare("SELECT id, statut FROM annonce WHERE id=? AND client_id=?")){
     $stmt->bind_param("ii", $annonceId, $clientId);
