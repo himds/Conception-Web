@@ -11,7 +11,7 @@
   $annonceId = isset($_POST['annonce_id']) ? (int)$_POST['annonce_id'] : 0;
   $action = isset($_POST['action']) ? $_POST['action'] : '';
 
-  if($annonceId <= 0 || !in_array($action, ['cloture', 'supprimer'], true)){
+  if($annonceId <= 0 || !in_array($action, ['cloture', 'publier', 'supprimer'], true)){
     $_SESSION['erreur'] = "Paramètres invalides";
     header('Location: admin.php');
     exit;
@@ -57,6 +57,17 @@
         $_SESSION['message'] = "Annonce clôturée avec succès";
       } else {
         $_SESSION['erreur'] = "Impossible de clôturer l'annonce";
+      }
+      $stmt->close();
+    }
+  } else if($action === 'publier'){
+    // 发布公告（从cloture状态恢复）
+    if($stmt = $mysqli->prepare("UPDATE annonce SET statut='publie' WHERE id=?")){
+      $stmt->bind_param("i", $annonceId);
+      if($stmt->execute()){
+        $_SESSION['message'] = "Annonce publiée avec succès";
+      } else {
+        $_SESSION['erreur'] = "Impossible de publier l'annonce";
       }
       $stmt->close();
     }

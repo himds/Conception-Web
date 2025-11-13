@@ -13,11 +13,11 @@ if($mysqli->connect_error){
   exit;
 }
 
-// Construire la requête SQL
-$sql = "SELECT a.id, a.titre, a.ville_depart, a.ville_arrivee, a.date_debut 
+// Construire la requête SQL - inclure les annonces publiées et clôturées
+$sql = "SELECT a.id, a.titre, a.ville_depart, a.ville_arrivee, a.date_debut, a.statut 
         FROM annonce a 
         JOIN compte c ON c.id = a.client_id 
-        WHERE a.statut='publie'";
+        WHERE a.statut IN ('publie', 'cloture')";
 
 // Vérifier si le champ actif existe
 $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
@@ -53,7 +53,8 @@ if($res && $res->num_rows > 0) {
       'titre' => htmlspecialchars($row['titre']),
       'ville_depart' => htmlspecialchars($row['ville_depart']),
       'ville_arrivee' => htmlspecialchars($row['ville_arrivee']),
-      'date_debut' => htmlspecialchars($row['date_debut'])
+      'date_debut' => htmlspecialchars($row['date_debut']),
+      'statut' => htmlspecialchars($row['statut'])
     ];
   }
 }

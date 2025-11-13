@@ -53,9 +53,9 @@
                   $_SESSION['message'] = "Connexion réussie";
                   // Redirection selon le rôle
                   if((int)$row['role'] === 1){
-                    header('Location: annonce_nouvelle.php');
+                    header('Location: index.php'); // 用户跳转到首页
                   } else if((int)$row['role'] === 2){
-                    header('Location: mes_offres.php');
+                    header('Location: index.php'); // 搬家工人跳转到首页
                   } else if((int)$row['role'] === 3){
                     header('Location: admin.php'); // 管理员重定向到管理页面
                   } else {

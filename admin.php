@@ -233,6 +233,8 @@
                 echo '<td>'.htmlspecialchars($row['created_at']).'</td>';
                 echo '<td>';
                 echo '<a class="btn btn-sm btn-outline-primary" href="annonce_detail.php?id='.(int)$row['id'].'">Voir</a> ';
+                // 修改公告（所有状态都可以修改）
+                echo '<a class="btn btn-sm btn-outline-info" href="admin_annonce_edit.php?id='.(int)$row['id'].'">Modifier</a> ';
                 // 修改状态
                 if($row['statut'] === 'publie'){
                   echo '<form class="d-inline" method="POST" action="tt_admin_annonce_manage.php">';
@@ -240,8 +242,14 @@
                   echo '<input type="hidden" name="action" value="cloture">';
                   echo '<button class="btn btn-sm btn-outline-warning" type="submit" onclick="return confirm(\'Êtes-vous sûr de vouloir clôturer cette annonce ?\')">Clôturer</button>';
                   echo '</form> ';
+                } else if($row['statut'] === 'cloture'){
+                  echo '<form class="d-inline" method="POST" action="tt_admin_annonce_manage.php">';
+                  echo '<input type="hidden" name="annonce_id" value="'.(int)$row['id'].'">';
+                  echo '<input type="hidden" name="action" value="publier">';
+                  echo '<button class="btn btn-sm btn-outline-success" type="submit" onclick="return confirm(\'Êtes-vous sûr de vouloir publier cette annonce ?\')">Publier</button>';
+                  echo '</form> ';
                 }
-                // 删除公告
+                // 删除公告（所有状态都可以删除）
                 echo '<form class="d-inline" method="POST" action="tt_admin_annonce_manage.php">';
                 echo '<input type="hidden" name="annonce_id" value="'.(int)$row['id'].'">';
                 echo '<input type="hidden" name="action" value="supprimer">';

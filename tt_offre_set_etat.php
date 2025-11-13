@@ -68,12 +68,50 @@
     $stmt->bind_param("sii", $etat, $offreId, $annonceId);
     if($stmt->execute()){
       $_SESSION['message'] = "Offre mise à jour";
-      // Si acceptée: optionnellement clôturer l'annonce
+      // Si acceptée: 检查是否所有nomination都已响应，如果是则关闭请求
       if($etat === 'accepte'){
-        if($stmt2 = $mysqli->prepare("UPDATE annonce SET statut='cloture' WHERE id=?")){
-          $stmt2->bind_param("i", $annonceId);
-          $stmt2->execute();
-          $stmt2->close();
+        // 获取公告的nb_demenageurs
+        $nbDemenageurs = null;
+        if($stmtAnnonce = $mysqli->prepare("SELECT nb_demenageurs FROM annonce WHERE id=?")){
+          $stmtAnnonce->bind_param("i", $annonceId);
+          $stmtAnnonce->execute();
+          $resAnnonce = $stmtAnnonce->get_result();
+          if($rowAnnonce = $resAnnonce->fetch_assoc()){
+            $nbDemenageurs = $rowAnnonce['nb_demenageurs'];
+          }
+          $stmtAnnonce->close();
+        }
+        
+        // 如果有指定数量，检查所有nomination是否都已响应
+        if($nbDemenageurs && $nbDemenageurs > 0){
+          // 查询该公告的所有nomination
+          if($stmtNom = $mysqli->prepare("SELECT COUNT(*) as total, SUM(CASE WHEN etat IN ('accepte', 'refuse') THEN 1 ELSE 0 END) as responded FROM nomination WHERE annonce_id=?")){
+            $stmtNom->bind_param("i", $annonceId);
+            $stmtNom->execute();
+            $resNom = $stmtNom->get_result();
+            if($rowNom = $resNom->fetch_assoc()){
+              $totalCount = (int)$rowNom['total'];
+              $respondedCount = (int)$rowNom['responded'];
+              
+              // 如果所有nomination都已响应（接受或拒绝），关闭请求
+              if($totalCount > 0 && $totalCount == $respondedCount){
+                // 所有nomination都已响应，关闭请求
+                if($stmt2 = $mysqli->prepare("UPDATE annonce SET statut='cloture' WHERE id=?")){
+                  $stmt2->bind_param("i", $annonceId);
+                  $stmt2->execute();
+                  $stmt2->close();
+                }
+              }
+            }
+            $stmtNom->close();
+          }
+        } else {
+          // 如果没有指定数量，直接关闭（原有逻辑）
+          if($stmt2 = $mysqli->prepare("UPDATE annonce SET statut='cloture' WHERE id=?")){
+            $stmt2->bind_param("i", $annonceId);
+            $stmt2->execute();
+            $stmt2->close();
+          }
         }
       }
     } else {

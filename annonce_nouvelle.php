@@ -101,6 +101,7 @@
 
     <div class="mb-3">
       <label class="form-label">Sélectionner les déménageurs (selon le nombre requis)</label>
+      <div id="demenageurs-selection-info" class="alert alert-info mb-2" style="display: none;"></div>
       <div class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
         <?php
         require_once('param.inc.php');
@@ -114,7 +115,7 @@
             } else {
               while($row = $res->fetch_assoc()){
                 echo '<div class="form-check mb-2">';
-                echo '<input class="form-check-input" type="checkbox" name="demenageurs[]" value="'.(int)$row['id'].'" id="demenageur_'.(int)$row['id'].'">';
+                echo '<input class="form-check-input demenageur-checkbox" type="checkbox" name="demenageurs[]" value="'.(int)$row['id'].'" id="demenageur_'.(int)$row['id'].'">';
                 echo '<label class="form-check-label" for="demenageur_'.(int)$row['id'].'">';
                 echo htmlspecialchars($row['prenom'].' '.$row['nom']).' ('.htmlspecialchars($row['email']).')';
                 echo '</label>';
@@ -127,7 +128,7 @@
         }
         ?>
       </div>
-      <small class="form-text text-muted">Cochez les déménageurs que vous souhaitez inviter pour ce déménagement</small>
+      <small class="form-text text-muted">Vous devez sélectionner exactement le nombre de déménageurs indiqué ci-dessus</small>
     </div>
 
     <div class="mb-3">
@@ -136,11 +137,76 @@
     </div>
 
     <div class="my-3">
-      <button class="btn btn-primary" type="submit">Publier l'annonce</button>
+      <button class="btn btn-primary" type="submit" id="submitBtn">Publier l'annonce</button>
     </div>
     </form>
 </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const nbDemenageursInput = document.getElementById('nb_demenageurs');
+  const checkboxes = document.querySelectorAll('.demenageur-checkbox');
+  const infoDiv = document.getElementById('demenageurs-selection-info');
+  const submitBtn = document.getElementById('submitBtn');
+  const form = document.querySelector('form');
+  
+  function updateSelectionLimit() {
+    const requiredCount = parseInt(nbDemenageursInput.value) || 0;
+    const selectedCount = document.querySelectorAll('.demenageur-checkbox:checked').length;
+    
+    if(requiredCount > 0) {
+      infoDiv.style.display = 'block';
+      infoDiv.textContent = `Nombre requis: ${requiredCount} | Sélectionnés: ${selectedCount}`;
+      
+      // 禁用或启用复选框
+      checkboxes.forEach(function(checkbox) {
+        if(!checkbox.checked && selectedCount >= requiredCount) {
+          checkbox.disabled = true;
+        } else {
+          checkbox.disabled = false;
+        }
+      });
+      
+      // 验证提交
+      if(selectedCount !== requiredCount) {
+        submitBtn.disabled = true;
+        infoDiv.className = 'alert alert-warning mb-2';
+      } else {
+        submitBtn.disabled = false;
+        infoDiv.className = 'alert alert-success mb-2';
+      }
+    } else {
+      infoDiv.style.display = 'none';
+      checkboxes.forEach(function(checkbox) {
+        checkbox.disabled = false;
+      });
+      submitBtn.disabled = false;
+    }
+  }
+  
+  nbDemenageursInput.addEventListener('input', updateSelectionLimit);
+  
+  checkboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', updateSelectionLimit);
+  });
+  
+  form.addEventListener('submit', function(e) {
+    const requiredCount = parseInt(nbDemenageursInput.value) || 0;
+    const selectedCount = document.querySelectorAll('.demenageur-checkbox:checked').length;
+    
+    if(requiredCount > 0 && selectedCount !== requiredCount) {
+      e.preventDefault();
+      alert('Vous devez sélectionner exactement ' + requiredCount + ' déménageur(s).');
+      return false;
+    }
+  });
+  
+  // 初始化
+  updateSelectionLimit();
+});
+</script>
+
 <?php include('footer.inc.php'); ?>
 
 
