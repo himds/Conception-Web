@@ -26,7 +26,30 @@
     exit;
   }
 
+  // 检查账户是否被停用 / Vérifier si le compte est désactivé
+  // 被停用的账户不能修改报价状态
+  // Les comptes désactivés ne peuvent pas modifier le statut des offres
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $clientId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas modifier les offres.";
+          header('Location: annonce_offres.php?id='.$annonceId);
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
+  }
+
   // Vérifier propriété de l'annonce et état
+  // 验证公告的所有权和状态 / Vérifier la propriété et le statut de l'annonce
+  // 确保用户只能管理自己的公告
+  // S'assurer que l'utilisateur ne peut gérer que ses propres annonces
   if($stmt = $mysqli->prepare("SELECT id, statut FROM annonce WHERE id=? AND client_id=?")){
     $stmt->bind_param("ii", $annonceId, $clientId);
     $stmt->execute();
@@ -38,6 +61,7 @@
       header('Location: annonces.php');
       exit;
     }
+    // 只能管理已发布的公告 / Ne peut gérer que les annonces publiées
     if($annonce['statut'] !== 'publie'){
       $_SESSION['erreur'] = "Annonce non modifiable";
       header('Location: annonce_offres.php?id='.$annonceId);
@@ -46,11 +70,14 @@
   }
 
   // Mettre à jour l'état de l'offre
+  // 更新报价状态 / Mettre à jour le statut de l'offre
   if($stmt = $mysqli->prepare("UPDATE offre SET etat=? WHERE id=? AND annonce_id=?")){
     $stmt->bind_param("sii", $etat, $offreId, $annonceId);
     if($stmt->execute()){
       $_SESSION['message'] = "Offre mise à jour";
       // Si acceptée: optionnellement clôturer l'annonce
+      // 如果报价被接受：可选择关闭公告
+      // Si l'offre est acceptée : optionnellement fermer l'annonce
       if($etat === 'accepte'){
         if($stmt2 = $mysqli->prepare("UPDATE annonce SET statut='cloture' WHERE id=?")){
           $stmt2->bind_param("i", $annonceId);

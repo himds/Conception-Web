@@ -26,7 +26,29 @@
     exit;
   }
 
+  // 检查账户是否被停用 / Vérifier si le compte est désactivé
+  // 被停用的账户不能创建报价
+  // Les comptes désactivés ne peuvent pas créer d'offres
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $demenageurId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas créer d'offre.";
+          header('Location: annonce_detail.php?id='.$annonceId);
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
+  }
+
   // Vérifier annonce publiee et pas soi-même
+  // 只能对已发布的公告提出报价，且不能在自己的公告上提出报价
+  // Ne peut proposer que sur les annonces publiées, et ne peut pas proposer sur ses propres annonces
   if($stmt = $mysqli->prepare("SELECT client_id, statut FROM annonce WHERE id = ?")){
     $stmt->bind_param("i", $annonceId);
     $stmt->execute();
@@ -38,11 +60,13 @@
       header('Location: annonces.php');
       exit;
     }
+    // 不能在自己的公告上提出报价 / Ne peut pas proposer sur sa propre annonce
     if((int)$row['client_id'] === $demenageurId){
       $_SESSION['erreur'] = "Vous ne pouvez pas proposer sur votre propre annonce";
       header('Location: annonce_detail.php?id='.$annonceId);
       exit;
     }
+    // 只能对已发布的公告提出报价 / Ne peut proposer que sur les annonces publiées
     if($row['statut'] !== 'publie'){
       $_SESSION['erreur'] = "Annonce non disponible";
       header('Location: annonce_detail.php?id='.$annonceId);

@@ -24,7 +24,29 @@
     exit;
   }
 
+  // 检查账户是否被停用 / Vérifier si le compte est désactivé
+  // 被停用的账户不能发送消息
+  // Les comptes désactivés ne peuvent pas envoyer de messages
+  $checkActif = $mysqli->query("SHOW COLUMNS FROM compte LIKE 'actif'");
+  if($checkActif && $checkActif->num_rows > 0) {
+    if($stmtCheck = $mysqli->prepare("SELECT actif FROM compte WHERE id=?")){
+      $stmtCheck->bind_param("i", $auteurId);
+      $stmtCheck->execute();
+      $resCheck = $stmtCheck->get_result();
+      if($userRow = $resCheck->fetch_assoc()){
+        if(isset($userRow['actif']) && $userRow['actif'] == 0){
+          $_SESSION['erreur'] = "Votre compte a été désactivé. Vous ne pouvez pas envoyer de message.";
+          header('Location: annonce_detail.php?id='.$annonceId);
+          exit;
+        }
+      }
+      $stmtCheck->close();
+    }
+  }
+
   // Déterminer type: si auteur est client de l'annonce => reponse, sinon question
+  // 确定消息类型：如果作者是公告的客户 => 回复，否则 => 问题
+  // Déterminer le type : si l'auteur est le client de l'annonce => réponse, sinon => question
   $type = 'question';
   if($stmt = $mysqli->prepare("SELECT client_id FROM annonce WHERE id=?")){
     $stmt->bind_param("i", $annonceId);
